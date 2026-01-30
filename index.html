@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git 학습 가이드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --code-bg: #282c34;
+            --code-text: #abb2bf;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            background: white;
+            margin: 2rem 0;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        section h3 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        section p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        section ul, section ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '$';
+            color: var(--success-color);
+            margin-right: 0.5rem;
+        }
+
+        .code-block code {
+            color: inherit;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background-color: #e7f3ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid var(--success-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        table th, table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:hover {
+            background-color: var(--bg-color);
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .command-card {
+            background-color: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .command-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .command-card code {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+
+            .command-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🐙 Git 학습 가이드</h1>
+        <p>버전 관리 시스템 Git의 기초부터 실전까지</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#introduction">Git 소개</a></li>
+            <li><a href="#installation">설치 방법</a></li>
+            <li><a href="#basics">기초 사용법</a></li>
+            <li><a href="#commands">주요 명령어</a></li>
+            <li><a href="#workflow">워크플로우</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="introduction">
+            <h2>Git이란?</h2>
+            <p>
+                <strong>Git</strong>은 분산 버전 관리 시스템(Distributed Version Control System, DVCS)입니다. 
+                2005년 리누스 토르발스(Linus Torvalds)가 리눅스 커널 개발을 위해 만들었으며, 
+                현재는 전 세계에서 가장 널리 사용되는 버전 관리 시스템입니다.
+            </p>
+
+            <h3>Git의 주요 특징</h3>
+            <ul>
+                <li><strong>분산 버전 관리</strong>: 각 개발자가 전체 프로젝트 히스토리를 로컬에 복사하여 독립적으로 작업할 수 있습니다.</li>
+                <li><strong>빠른 속도</strong>: 대부분의 작업이 로컬에서 이루어져 매우 빠릅니다.</li>
+                <li><strong>브랜치와 머지</strong>: 가볍고 빠른 브랜치 기능으로 효율적인 협업이 가능합니다.</li>
+                <li><strong>데이터 무결성</strong>: SHA-1 해시를 사용하여 데이터의 무결성을 보장합니다.</li>
+                <li><strong>오프라인 작업</strong>: 네트워크 연결 없이도 대부분의 작업을 수행할 수 있습니다.</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>💡 참고:</strong> Git과 GitHub는 다른 것입니다. Git은 버전 관리 도구이고, 
+                GitHub는 Git 저장소를 호스팅하는 웹 서비스입니다.
+            </div>
+        </section>
+
+        <section id="installation">
+            <h2>설치 방법</h2>
+            
+            <h3>Windows</h3>
+            <ol>
+                <li>공식 웹사이트(<a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>)에서 Git for Windows를 다운로드합니다.</li>
+                <li>다운로드한 설치 파일을 실행합니다.</li>
+                <li>설치 마법사의 기본 설정을 따라 진행합니다. (대부분 기본값으로 설치해도 됩니다)</li>
+                <li>설치가 완료되면 Git Bash 또는 명령 프롬프트에서 다음 명령어로 확인합니다:</li>
+            </ol>
+            <div class="code-block">
+git --version
+            </div>
+
+            <h3>macOS</h3>
+            <p>macOS에는 여러 설치 방법이 있습니다:</p>
+            <ol>
+                <li><strong>Homebrew 사용 (권장):</strong></li>
+            </ol>
+            <div class="code-block">
+brew install git
+            </div>
+            <ol start="2">
+                <li><strong>Xcode Command Line Tools:</strong></li>
+            </ol>
+            <div class="code-block">
+xcode-select --install
+            </div>
+            <ol start="3">
+                <li><strong>공식 웹사이트:</strong> <a href="https://git-scm.com/download/mac" target="_blank">https://git-scm.com/download/mac</a>에서 다운로드</li>
+            </ol>
+
+            <h3>Linux</h3>
+            <p>대부분의 Linux 배포판에는 패키지 관리자를 통해 설치할 수 있습니다:</p>
+            <div class="code-block">
+# Ubuntu/Debian
+sudo apt update
+sudo apt install git
+
+# Fedora
+sudo dnf install git
+
+# CentOS/RHEL
+sudo yum install git
+
+# Arch Linux
+sudo pacman -S git
+            </div>
+
+            <div class="success-box">
+                <strong>✅ 설치 확인:</strong> 모든 플랫폼에서 <code>git --version</code> 명령어로 설치가 제대로 되었는지 확인할 수 있습니다.
+            </div>
+        </section>
+
+        <section id="basics">
+            <h2>기초 사용법</h2>
+
+            <h3>최초 설정</h3>
+            <p>Git을 처음 사용하기 전에 사용자 정보를 설정해야 합니다:</p>
+            <div class="code-block">
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+            </div>
+
+            <div class="info-box">
+                <strong>💡 팁:</strong> <code>--global</code> 옵션은 시스템 전체에 적용됩니다. 
+                특정 프로젝트에만 다른 설정을 사용하려면 <code>--global</code> 없이 실행하세요.
+            </div>
+
+            <h3>저장소 초기화</h3>
+            <p>새로운 프로젝트를 Git으로 관리하기 시작하려면:</p>
+            <div class="code-block">
+git init
+            </div>
+            <p>이 명령어는 현재 디렉토리에 <code>.git</code> 폴더를 생성하여 Git 저장소로 만듭니다.</p>
+
+            <h3>원격 저장소 복제</h3>
+            <p>이미 존재하는 원격 저장소를 로컬로 가져오려면:</p>
+            <div class="code-block">
+git clone https://github.com/username/repository.git
+            </div>
+            <p>또는 SSH를 사용하는 경우:</p>
+            <div class="code-block">
+git clone git@github.com:username/repository.git
+            </div>
+        </section>
+
+        <section id="commands">
+            <h2>주요 명령어</h2>
+
+            <h3>기본 워크플로우 명령어</h3>
+            <div class="command-grid">
+                <div class="command-card">
+                    <h4>git status</h4>
+                    <p>작업 디렉토리의 상태를 확인합니다. 변경된 파일, 스테이징된 파일 등을 보여줍니다.</p>
+                    <code>git status</code>
+                </div>
+
+                <div class="command-card">
+                    <h4>git add</h4>
+                    <p>변경사항을 스테이징 영역에 추가합니다.</p>
+                    <code>git add filename</code><br>
+                    <code>git add .</code> (모든 파일)
+                </div>
+
+                <div class="command-card">
+                    <h4>git commit</h4>
+                    <p>스테이징된 변경사항을 커밋합니다.</p>
+                    <code>git commit -m "커밋 메시지"</code>
+                </div>
+
+                <div class="command-card">
+                    <h4>git push</h4>
+                    <p>로컬 커밋을 원격 저장소에 업로드합니다.</p>
+                    <code>git push origin main</code>
+                </div>
+
+                <div class="command-card">
+                    <h4>git pull</h4>
+                    <p>원격 저장소의 변경사항을 가져와 병합합니다.</p>
+                    <code>git pull origin main</code>
+                </div>
+
+                <div class="command-card">
+                    <h4>git fetch</h4>
+                    <p>원격 저장소의 변경사항을 가져오지만 병합하지는 않습니다.</p>
+                    <code>git fetch origin</code>
+                </div>
+            </div>
+
+            <h3>브랜치 관련 명령어</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>명령어</th>
+                        <th>설명</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>git branch</code></td>
+                        <td>모든 브랜치 목록을 보여줍니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git branch branch-name</code></td>
+                        <td>새 브랜치를 생성합니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git checkout branch-name</code></td>
+                        <td>특정 브랜치로 전환합니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git checkout -b branch-name</code></td>
+                        <td>새 브랜치를 생성하고 전환합니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git merge branch-name</code></td>
+                        <td>지정한 브랜치를 현재 브랜치에 병합합니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git branch -d branch-name</code></td>
+                        <td>브랜치를 삭제합니다</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>히스토리 및 로그</h3>
+            <div class="command-grid">
+                <div class="command-card">
+                    <h4>git log</h4>
+                    <p>커밋 히스토리를 확인합니다.</p>
+                    <code>git log</code><br>
+                    <code>git log --oneline</code> (한 줄로 표시)<br>
+                    <code>git log --graph</code> (그래프로 표시)
+                </div>
+
+                <div class="command-card">
+                    <h4>git diff</h4>
+                    <p>변경사항의 차이를 확인합니다.</p>
+                    <code>git diff</code> (작업 디렉토리와 스테이징 영역 비교)<br>
+                    <code>git diff --staged</code> (스테이징 영역과 마지막 커밋 비교)
+                </div>
+
+                <div class="command-card">
+                    <h4>git show</h4>
+                    <p>특정 커밋의 상세 정보를 보여줍니다.</p>
+                    <code>git show commit-hash</code>
+                </div>
+            </div>
+
+            <h3>되돌리기 및 복구</h3>
+            <div class="warning-box">
+                <strong>⚠️ 주의:</strong> 되돌리기 명령어는 신중하게 사용해야 합니다. 
+                특히 이미 원격 저장소에 푸시된 커밋을 수정할 때는 팀원과 상의하세요.
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>명령어</th>
+                        <th>설명</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>git restore filename</code></td>
+                        <td>작업 디렉토리의 파일을 마지막 커밋 상태로 복구합니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git restore --staged filename</code></td>
+                        <td>스테이징 영역에서 파일을 제거합니다</td>
+                    </tr>
+                    <tr>
+                        <td><code>git reset --soft HEAD~1</code></td>
+                        <td>마지막 커밋을 취소하지만 변경사항은 스테이징 영역에 유지</td>
+                    </tr>
+                    <tr>
+                        <td><code>git reset --hard HEAD~1</code></td>
+                        <td>마지막 커밋과 변경사항을 완전히 삭제 (주의!)</td>
+                    </tr>
+                    <tr>
+                        <td><code>git revert commit-hash</code></td>
+                        <td>특정 커밋의 변경사항을 되돌리는 새 커밋을 생성합니다</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="workflow">
+            <h2>일반적인 워크플로우</h2>
+
+            <h3>기본 작업 흐름</h3>
+            <ol>
+                <li><strong>작업 시작:</strong> 원격 저장소에서 최신 변경사항을 가져옵니다
+                    <div class="code-block">
+git pull origin main
+                    </div>
+                </li>
+                <li><strong>파일 수정:</strong> 코드를 작성하거나 수정합니다</li>
+                <li><strong>변경사항 확인:</strong> 어떤 파일이 변경되었는지 확인합니다
+                    <div class="code-block">
+git status
+                    </div>
+                </li>
+                <li><strong>스테이징:</strong> 커밋할 파일을 선택합니다
+                    <div class="code-block">
+git add .
+                    </div>
+                </li>
+                <li><strong>커밋:</strong> 변경사항을 커밋합니다
+                    <div class="code-block">
+git commit -m "변경사항에 대한 설명"
+                    </div>
+                </li>
+                <li><strong>업로드:</strong> 원격 저장소에 푸시합니다
+                    <div class="code-block">
+git push origin main
+                    </div>
+                </li>
+            </ol>
+
+            <h3>브랜치를 사용한 협업 워크플로우</h3>
+            <ol>
+                <li>새 기능을 위한 브랜치 생성 및 전환
+                    <div class="code-block">
+git checkout -b feature/new-feature
+                    </div>
+                </li>
+                <li>작업 후 커밋 및 푸시
+                    <div class="code-block">
+git add .
+git commit -m "새 기능 추가"
+git push origin feature/new-feature
+                    </div>
+                </li>
+                <li>GitHub/GitLab 등에서 Pull Request 생성</li>
+                <li>코드 리뷰 후 메인 브랜치에 병합</li>
+                <li>로컬에서 메인 브랜치로 전환하고 최신화
+                    <div class="code-block">
+git checkout main
+git pull origin main
+                    </div>
+                </li>
+            </ol>
+
+            <div class="info-box">
+                <strong>💡 모범 사례:</strong>
+                <ul>
+                    <li>의미 있는 커밋 메시지를 작성하세요</li>
+                    <li>작은 단위로 자주 커밋하세요</li>
+                    <li>작업 전에 항상 최신 상태로 업데이트하세요</li>
+                    <li>브랜치를 사용하여 기능별로 작업을 분리하세요</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Git 학습 가이드. Git을 배우고 함께 성장해요! 🚀</p>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        ↑
+    </div>
+
+    <script>
+        // 부드러운 스크롤
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 스크롤 탑 버튼
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 코드 블록 클릭 시 복사 기능 (선택사항)
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.style.cursor = 'pointer';
+            block.title = '클릭하여 복사';
+            block.addEventListener('click', function() {
+                const text = this.textContent.replace(/^\$\s*/, '').trim();
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalBg = this.style.backgroundColor;
+                    this.style.backgroundColor = '#27ae60';
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBg;
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
